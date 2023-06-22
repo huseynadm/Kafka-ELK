@@ -1,0 +1,67 @@
+stages:
+  - Build
+  - Image
+  - Deploy
+
+variables:
+    CI_REGISTRY: https://index.docker.io/v1/
+    CI_REGISTRY_USER: huseynmi9
+    CI_REGISTRY_IMAGE: huseynmi9/hello-app
+
+Build:
+  stage: Build
+  image: maven:3.8.6-openjdk-18
+  script:
+    - cd $CI_PROJECT_DIR/my-app
+    - mvn package
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/hello-app/target/*
+
+Image:
+  stage: Image
+  image:
+    name: gcr.io/kaniko-project/executor:v1.9.0-debug
+    entrypoint: [""]
+  script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - cat /kaniko/.docker/config.json
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+      --destination "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
+      
+Deploy:
+  stage: Deploy
+  image: 
+    name: bitnami/kubectl
+    entrypoint: [""]
+  before_script:
+  - echo "configuration kubernetes access in pipeline"
+  - cat $KUBE_CONFIG | base64 -d > config
+  - mv config ~/.kube/
+  script: 
+    - kubectl config use-context kubernetes-admin@kubernetes
+    - sed -i "s/<CI_COMMIT_SHORT_SHA>/${CI_COMMIT_SHORT_SHA}/g" $DEPLOYMENT_FILE
+    - kubectl apply -n ${NAMESPACE} -f $DEPLOYMENT_FILE
+  only:
+    - main
+
+
+
+deploy-develop:
+  stage: Deploy
+  image: 
+    name: bitnami/kubectl
+    entrypoint: [""]
+  before_script:
+  - echo "configuration kubernetes access in pipeline"
+  - cat $KUBE_CONFIG | base64 -d > config
+  - mv config ~/.kube/
+  script: 
+    - kubectl config use-context kubernetes-admin@kubernetes
+    - sed -i "s/<CI_COMMIT_SHORT_SHA>/${CI_COMMIT_SHORT_SHA}/g" $DEPLOYMENT_FILE
+    - kubectl apply -n ${NAMESPACE} -f $DEPLOYMENT_FILE
+  only: 
+    - main
