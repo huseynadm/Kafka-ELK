@@ -18,7 +18,7 @@ Go to https://192.168.1.48:9000 and Create Kafka cluster and Topic.
 Go to Kibana and create Index Pattern named "registered-user".
 
 6.STEP
-Run python code which logging "Hello World" to Kafka.
+Run python code which logging "Hello World" to Kafka. (I use Python for Logging Application)
 
 7.STEP
 Go to Kibana Dashboard.
