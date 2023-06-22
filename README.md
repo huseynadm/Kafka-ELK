@@ -6,7 +6,7 @@ docker-compose -f elasticsearch-kibana-docker-compose.yaml up
 docker-compose -f kafka-docker-compose.yaml up
 
 3.STEP
-Installing Logstash to Ubuntu host nad configuration.
+Installing Logstash to Ubuntu host and configuration.
 apt install logstash
 add pipeline.conf to /etc/logstash/conf.d/ directory.
 start logstash service.
