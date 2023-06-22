@@ -24,3 +24,6 @@ Run python code which logging "Hello World" to Kafka. (I use Python for Logging 
 Go to Kibana Dashboard.
 
 ![1111](https://github.com/huseynadm/Kafka-ELK/assets/98022012/63be66cc-bf41-42e3-b3a1-cf40361d0f32)
+
+
+Demo Video Link : https://github.com/huseynadm/Kafka-ELK/raw/main/DevOps_Task.mp4
