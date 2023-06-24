@@ -16,7 +16,7 @@ Build:
     - mvn package
   artifacts:
     paths:
-      - $CI_PROJECT_DIR/hello-app/target/*
+      - $CI_PROJECT_DIR/my-app/target/*
 
 Image:
   stage: Image
